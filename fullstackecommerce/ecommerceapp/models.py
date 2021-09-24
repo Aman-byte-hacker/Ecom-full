@@ -28,6 +28,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand,on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="uploads/productimages",default="") 
     minimumquantity = models.CharField(max_length=100)
     is_available = models.BooleanField(default=True)
 
