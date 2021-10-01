@@ -16,6 +16,7 @@ class Brand(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
+    image = models.ImageField(upload_to="uploads/categories",default="")
 
     class Meta:
         verbose_name_plural = "categories"
@@ -57,5 +58,4 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.name
-
-
+        

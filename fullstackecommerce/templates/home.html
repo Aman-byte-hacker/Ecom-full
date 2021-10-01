@@ -1,12 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Home page</h1>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block style %}
+{% endblock %}
+{% block content %}
+    {% for carousle in carousle %}
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img  src="{{carousle.image1.url}}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="{{carousle.image2.url}}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="{{carousle.image3.url}}" class="d-block w-100" alt="...">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    {% endfor %}
+    <p style="font-size: 24px; color:grey; background-color:whitesmoke; margin-top:3%; margin-left:1%;" class="container-fluid">Top Categories</p>
+    <div class="container-fluid mt-2">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    {% for category in category %}
+                        <div class="col-lg-2  my-2 col-md-4 col-sm-6 col-12 border">
+                            <img style="width: 150px;  height:150px; display:block; margin-left:auto; margin-right:auto; border-radius:50%;" src="{{category.image.url}}" alt="brands">
+                            <p style="text-align:center; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; letter-spacing:1px; text-transform:capitalize;">{{category.name}}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
