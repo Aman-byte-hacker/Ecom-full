@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block style %}
+<style>
+    .btni{
+        padding: 9px 12px 9px 12px;
+        border-radius:8px;
+        background-color:#120E43;
+        border:none;
+        color:white;
+      }
+</style>
+{% endblock %}
+{% block content %}
+<p style="font-size: 24px; color:grey; background-color:whitesmoke; margin-top:3%; margin-left:1%;" class="container-fluid">Filter by Categories</p>
+    <div class="container-fluid mt-2">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    {% for category in category %}
+                        <div class="col-lg-2  my-2 col-md-4 col-sm-6 col-12 border">
+                          <a href="?category={{category.id}}"><img style="width: 60px;  height:50px; display:block; margin-left:auto; margin-right:auto; border-radius:50%;" src="{{category.image.url}}" alt="brands"></a>
+                          <p style="text-align:center; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; letter-spacing:1px; text-transform:capitalize;">{{category.name}}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <p style="font-size: 24px; color:grey; background-color:whitesmoke; margin-top:3%; margin-left:1%;" class="container-fluid">All Products</p>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    {% for product in product %}
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="card1 border my-2">
+                            <img style="width:200px; display:block; margin-left:auto; margin-right:auto; height:200px;" src="{{product.image.url}}" alt="">
+                            <!-- <img style="height:70px; width:50%; display:block; margin-left:auto; margin-right:auto;" src="{{product.brand.image.url}}" alt="brandimage"> -->
+                            <h5 style="text-align: center; height:50px;">{{product.name}}</h5>
+                            <p style="text-align:center;"><a href="/see/{{product.id}}"><button class="btni col-lg-12">See More</button></a></p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock%}

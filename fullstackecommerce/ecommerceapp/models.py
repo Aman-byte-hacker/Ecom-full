@@ -31,18 +31,29 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand,on_delete=models.CASCADE)
     image = models.ImageField(upload_to="uploads/productimages",default="") 
     minimumquantity = models.CharField(max_length=100)
+    discount = models.PositiveIntegerField(default=0,null=True,blank=True)
     is_available = models.BooleanField(default=True)
+
+    @staticmethod
+    def product_by_categories(category_id):
+        if category_id:
+            return Product.objects.filter(category=category_id,is_available=True)
+        else:
+            return Product.objects.filter(is_available=True)    
+
 
     def __str__(self):
         return self.name
 
 class Register(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    phone = models.PositiveIntegerField(default=+91)
-    pincode = models.PositiveIntegerField(default=0)
-    city = models.CharField(max_length=100)
-    address = models.CharField(max_length=200)
-    
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    name = models.CharField(max_length=200,default="")
+    mobile  = models.IntegerField(default=0)
+    address = models.TextField(max_length=2000)
+    city = models.CharField(max_length=300)
+    pincode = models.IntegerField(default="")
+    state = models.CharField(max_length=100,default="")
+
     def __str__(self):
         return self.user.first_name
 
@@ -59,3 +70,19 @@ class Contact(models.Model):
     def __str__(self):
         return self.name
         
+
+class Payment(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,on_delete=models.DO_NOTHING)
+
+    statuses = [
+        ('success','success'),
+        ('fail','fail')
+    ]        
+    status = models.CharField(choices=statuses,max_length=200)
+    orderid = models.CharField(max_length=300,default="")
+    paymentid = models.CharField(max_length=300,default="")
+    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.user.first_name

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block title %} See More {% endblock %}
+{% block style %}
+
+<style>
+    .productimage {
+        width: 340px;
+        height: 340px;
+        transition: transform 1s;
+
+    }
+
+    .productimage:hover {
+        transform: scale(1.5);
+    }
+
+    .productspecifications {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 8%;
+        margin-bottom:2%;
+        align-items: center;
+    }
+
+    .productspecs {}
+    @media screen and (max-width: 680px) {
+        .productspecifications{
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        .productimage{
+            height: 220px;
+        }
+        .productimage:hover{
+            transform: scale(1.1);
+        }
+        .btni{
+            margin-bottom: 2%;
+        }
+      
+      }
+</style>
+{% endblock %}
+{% block content %}
+<div class="productspecifications">
+    {% for product in product %}
+       <img class="productimage" src="{{product.image.url}}" alt="">
+    
+    {% endfor %}
+    {% for product in product %}
+    <div class="productspecs">
+        <p id="prodname" style="font-size:xx-large; text-transform:capitalize;">{{product.name}}</p>
+        <!-- <p>By <span style="font-size: large; color:rgb(124, 126, 230)">{{product.businessname}}</span></p> -->
+        <p id="proddesc" style="width: 500px; text-transform:capitalize; font-size:large;">{{product.description}}</p>
+        <p style="font-size:large;">Price : <del>{{product.price}}₹ </del><br><b>{{product | wholeprice }}₹ 
+                {{product.pricefor}}</b></p>
+        <form action="buy/{{product.id}}" method="GET">
+            {% csrf_token %}
+            
+            <a href="buy/{{product.id}}"><button class="btni col-lg-12" type="submit"
+                    style="border: none; cursor:pointer; padding:7px; background-color:#120E43; color:white; border-radius:6px; padding-left:14px; padding-right:14px; "
+                    type="submit">Buy Now</button></a>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
