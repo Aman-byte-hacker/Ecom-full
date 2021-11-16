@@ -82,7 +82,28 @@ class Payment(models.Model):
     status = models.CharField(choices=statuses,max_length=200)
     orderid = models.CharField(max_length=300,default="")
     paymentid = models.CharField(max_length=300,default="")
-    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.user.first_name
+
+class Userproduct(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    name = models.CharField(max_length=200,default="")
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    payment = models.ForeignKey(Payment,on_delete=models.CASCADE)
+    orderid = models.CharField(max_length=200,default="")
+    paymentid = models.CharField(max_length=200,default="")
+    totalprice = models.FloatField(default=0)
+    delstatus = [
+        ('Accepted','Accepted'),
+        ('Packed','Packed'),
+        ('Shipped','Shipped'),
+        ('on the way','on the way'),
+        ('delievered','delievered')
+    ]
+
+    status = models.CharField(choices=delstatus,max_length=300,default="Accepted")
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.first_name

@@ -36,7 +36,7 @@
                             <div class="card1 border my-2">
                             <img style="width:200px; display:block; margin-left:auto; margin-right:auto; height:200px;" src="{{product.image.url}}" alt="">
                             <!-- <img style="height:70px; width:50%; display:block; margin-left:auto; margin-right:auto;" src="{{product.brand.image.url}}" alt="brandimage"> -->
-                            <h5 style="text-align: center; height:50px;">{{product.name}}</h5>
+                            <h5 style="text-align: center; height:50px;">{{product.name|truncatechars:29}}</h5>
                             <p style="text-align:center;"><a href="/see/{{product.id}}"><button class="btni col-lg-12">See More</button></a></p>
                             </div>
                         </div>

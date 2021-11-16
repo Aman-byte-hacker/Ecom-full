@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block style %}
+{% endblock %}
+{% load custom_filters %}
+{% block title %} Search {% endblock %}
+{% block content %}
+   <div class="container-fluid">
+        <h5 style="margin-left: 3%; margin-top:3%;">Search Results : </h5>
+    <div class="row mt-2">
+        <div class="col">
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-12 border">
+                        <img style="width: 250px; opacity:0.9; height:200px; display:block; margin-left:auto; margin-right:auto;" src="{{product.image.url}}" alt="product">
+                        <p style="text-align: center;">{{product.name|truncatechars:29}}</p>
+                        <p style="text-align: center;">Price : <del>{{product.price}}₹</del>  {{ product|wholeprice }} ₹  
+                        <p style="text-align: center;"><a class="btni" href="see/{{product.id}}"><button class="btn" style="background-color:rgb(156, 200, 176); color:white;" type="submit">See More</button></a></p>
+                    </div>
+                {% endfor %}    
+            </div>
+        </div>
+    </div>
+   </div>
+{% endblock %}

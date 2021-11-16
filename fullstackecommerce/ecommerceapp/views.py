@@ -2,8 +2,11 @@ from django.shortcuts import render,redirect
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.contrib.auth import authenticate,login,logout
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -12,9 +15,9 @@ def index(request):
     category = Category.objects.all()[:12]
     categories = request.GET.get('category')
     if categories:
-        product = Product.objects.filter(category=categories,is_available=True)
+        product = Product.objects.filter(category=categories,is_available=True)[:20]
     else:
-        product = Product.objects.filter(is_available=True)    
+        product = Product.objects.filter(is_available=True)[:20]    
     print(categories)
     context = {
         'carousle' : carousle,
@@ -94,30 +97,39 @@ def logout(request):
     messages.success(request,"Logged out Successfully")
     return redirect("/")
 
+def search(request):
+    query = request.GET.get('search')
+    if query:
+        product = Product.objects.filter(name__icontains = query)
+    else:
+        return HttpResponse("nope")
+    context = {
+        'products' : product
+    }        
+    print(query)
+    return render(request,"search.html",context=context)
+
+
 import razorpay
 client = razorpay.Client(auth=("rzp_test_FVgxuzBdJ9c4So", "4riLfbUSnTNTzkNFzoIqA7GD"))
-def payment(request):
+
+@login_required
+def buy(request,product_id):
     if request.user.is_authenticated:
         user = request.user
-        product = Product.objects.get(id=product_id)
-        quantity = int(request.GET.get('quantity'))
-        quantityproduct = float(quantity)    
-        print(quantity)
     else:
         return redirect('/login')    
-    
-    
-    productprice = (product.price - (product.price*product.discount/100))
-    order_amount = productprice * quantityproduct * 100
+    product = Product.objects.get(id=product_id)
+    order_amount = product.price * 100
     order_currency = 'INR'
-    order_receipt = 'order_rcptid_{{product.id}}_{{user.id}}'
+    order_receipt = 'order_rcptid_{product.id}_{user.id}'
     data = {
         'amount' : order_amount,
         'currency' : order_currency,
         'receipt' : order_receipt
     }
     order = client.order.create(data=data)
-    payment = Payment(user=user,product=product,status='fail',orderid=order.get('id'),quantity=quantityproduct)
+    payment = Payment(user=user,product=product,status='FAIL',orderid=order.get('id'))
     payment.save()
     print(order)
     context={
@@ -125,6 +137,39 @@ def payment(request):
         'order': order
     }
 
-    return render(request,"buy.html",context) 
-            
+    return render(request,"buy.html",context=context) 
+
+@csrf_exempt
+def verifypayment(request):
+    if request.method == "POST":
+        print(request.POST)
+        razorpay_payment_id = request.POST.get('razorpay_payment_id')
+        razorpay_order_id = request.POST.get('razorpay_order_id')
+        razorpay_signature = request.POST.get('razorpay_signature')
+        params_dict = {
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        }
+        client.utility.verify_payment_signature(params_dict)
+        payment = Payment.objects.get(orderid = razorpay_order_id)
+        payment.status = "success"
+        payment.paymentid = razorpay_payment_id
+        payment.save()
+
+        user_product = Userproduct(user = payment.user, name=payment.user.first_name,payment=payment,product=payment.product,orderid=payment.orderid,paymentid=payment.paymentid,totalprice=payment.product.price)
+        user_product.save()
+        return redirect ('/orders')            
         
+def orders(request):
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        user = None
+
+    userproduct = Userproduct.objects.filter(user=user)
+
+    context = {
+        'userproducts' : userproduct
+    }        
+    return render(request,"order.html",context=context)       

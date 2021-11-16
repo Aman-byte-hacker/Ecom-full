@@ -18,7 +18,7 @@
     .productspecifications {
         display: flex;
         justify-content: space-evenly;
-        margin-top: 8%;
+        margin-top: 5%;
         margin-bottom:2%;
         align-items: center;
     }
@@ -51,15 +51,15 @@
     {% endfor %}
     {% for product in product %}
     <div class="productspecs">
-        <p id="prodname" style="font-size:xx-large; text-transform:capitalize;">{{product.name}}</p>
+        <p id="prodname" style="font-size:xx-large; text-transform:capitalize;">{{product.name|truncatechars:31}}</p>
         <!-- <p>By <span style="font-size: large; color:rgb(124, 126, 230)">{{product.businessname}}</span></p> -->
-        <p id="proddesc" style="width: 500px; text-transform:capitalize; font-size:large;">{{product.description}}</p>
+        <p id="proddesc" style="width: 500px; text-transform:capitalize; font-size:large;">{{product.description|truncatechars:600}}</p>
         <p style="font-size:large;">Price : <del>{{product.price}}₹ </del><br><b>{{product | wholeprice }}₹ 
                 {{product.pricefor}}</b></p>
-        <form action="buy/{{product.id}}" method="GET">
+        <form action="payment/{{product.id}}" method="GET">
             {% csrf_token %}
             
-            <a href="buy/{{product.id}}"><button class="btni col-lg-12" type="submit"
+            <a href="payment/{{product.id}}"><button class="btni col-lg-12" type="submit"
                     style="border: none; cursor:pointer; padding:7px; background-color:#120E43; color:white; border-radius:6px; padding-left:14px; padding-right:14px; "
                     type="submit">Buy Now</button></a>
         </form>

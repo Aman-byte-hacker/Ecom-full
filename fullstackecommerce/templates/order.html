@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}{% endblock %}
+{% block style %}
+<style>
+
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="table-responsive">
+            <table class="table mt-5 ">
+                <thead>
+                    <tr class="text-center">
+                        <th>User Name</th>
+                        <th>Product Image</th>
+                        <th>Product</th>
+                        <th>Status</th>
+                        <th>Placed Order date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                            {% for userproduct in userproducts %}
+                                <tr class="text-center">
+                                    <td>{{userproduct.user.first_name}}</td>
+                                    <td><img style="width:40px; height:40px;" src="{{userproduct.product.image.url}}"></td>
+                                    <td>{{userproduct.product.name|truncatechars:30}}</td>
+                                    <td>{{userproduct.status}}</td>
+                                    <td>{{userproduct.date}}</td>
+                                </tr>
+                            {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
